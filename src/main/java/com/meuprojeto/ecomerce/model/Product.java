@@ -5,17 +5,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 
-@Entity //Define a classe como uma entidade do JPA (Java Persistence API).
+@Entity
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // (Id) Indicam que o campo id é a chave primária e será gerado automaticamente.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String description;
-    private double price;
-    private int stockQuantity;
+
+    private String name = "Sem Nome";
+
+    private String description = "Sem Descrição";
+
+    @NotNull(message = "O preço é obrigatório.")
+    private Double price = 10.0;
+
+    private Integer stockQuantity = 50;
 
     public Long getId() {
         return id;
@@ -41,11 +47,11 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public @NotNull(message = "O preço é obrigatório.") Double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(@NotNull(message = "O preço é obrigatório.") Double price) {
         this.price = price;
     }
 
@@ -68,3 +74,5 @@ public class Product {
                 '}';
     }
 }
+
+
