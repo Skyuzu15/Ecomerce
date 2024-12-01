@@ -2,42 +2,46 @@ package com.meuprojeto.ecomerce.controller;
 
 import com.meuprojeto.ecomerce.model.Categoria;
 import com.meuprojeto.ecomerce.service.CategoriaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/categorias")
+@RequestMapping("/categorias")
 public class CategoriaController {
 
-    @Autowired
-    private CategoriaService categoriaService;
+    private final CategoriaService categoriaService;
 
-    @PostMapping("/salvar")
-    public Categoria salvarCategoria(@RequestBody Categoria categoria) {
-        return categoriaService.salvar(categoria);
+    public CategoriaController(CategoriaService categoriaService) {
+        this.categoriaService = categoriaService;
     }
 
-    @GetMapping("/listar")
-    public List<Categoria> listarCategoria() {
-        return categoriaService.listarTodas();
+    @GetMapping
+    public ResponseEntity<List<Categoria>> listarCategorias() {
+        return ResponseEntity.ok(categoriaService.listarCategorias());
     }
 
     @GetMapping("/{id}")
-    public Optional<Categoria> buscarCategoriaPorId(@PathVariable Long id) {
-        return categoriaService.buscarPorId(id);
+    public ResponseEntity<Categoria> buscarCategoriaPorId(@PathVariable Long id) {
+        return categoriaService.buscarCategoriaPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Categoria> criarCategoria(@RequestBody Categoria categoria) {
+        return ResponseEntity.ok(categoriaService.criarCategoria(categoria));
     }
 
     @PutMapping("/{id}")
-    public Categoria atualizarCategoria(@PathVariable Long id, @RequestBody Categoria categoria) {
-        categoria.setId(id);
-        return categoriaService.salvar(categoria);
+    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable Long id, @RequestBody Categoria categoriaAtualizada) {
+        return ResponseEntity.ok(categoriaService.atualizarCategoria(id, categoriaAtualizada));
     }
 
-    @DeleteMapping
-    public void  deletarCategoria(@PathVariable Long id) {
-        categoriaService.deletarPorId(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarCategoria(@PathVariable Long id) {
+        categoriaService.deletarCategoria(id);
+        return ResponseEntity.noContent().build();
     }
 }

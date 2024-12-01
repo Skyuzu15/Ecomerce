@@ -1,9 +1,8 @@
 package com.meuprojeto.ecomerce.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Categoria {
@@ -11,8 +10,34 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 50)
     private String nome;
-    private String description;
+
+    @Column(length = 255)
+    private String descricao;
+
+    @Column(name = "imagem_url")
+    private String imagem_url;
+
+    @Column(unique = true)
+    private String slug;
+
+    @Column(nullable = false)
+    private Boolean status = true;
+
+    @Column(name = "data_criação", nullable = false, updatable = false)
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @Column(name = "ordem")
+    private Integer ordem;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Categoria parent;
 
     public Long getId() {
         return id;
@@ -30,11 +55,67 @@ public class Categoria {
         this.nome = nome;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getImagem_url() {
+        return imagem_url;
+    }
+
+    public void setImagem_url(String imagem_url) {
+        this.imagem_url = imagem_url;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public Integer getOrdem() {
+        return ordem;
+    }
+
+    public void setOrdem(Integer ordem) {
+        this.ordem = ordem;
+    }
+
+    public Categoria getParent() {
+        return parent;
+    }
+
+    public void setParent(Categoria parent) {
+        this.parent = parent;
     }
 }

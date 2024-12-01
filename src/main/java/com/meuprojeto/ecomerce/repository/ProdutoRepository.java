@@ -1,10 +1,10 @@
 package com.meuprojeto.ecomerce.repository;
 
-import com.meuprojeto.ecomerce.model.Product;
+import com.meuprojeto.ecomerce.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 }
 

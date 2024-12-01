@@ -2,40 +2,48 @@ package com.meuprojeto.ecomerce.service;
 
 import com.meuprojeto.ecomerce.model.Categoria;
 import com.meuprojeto.ecomerce.repository.CategoriaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CategoriaService {
 
-    @Autowired
-    private CategoriaRepository categoriaRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    public List<Categoria> listarTodas() {
+    public CategoriaService(CategoriaRepository categoriaRepository) {
+        this.categoriaRepository = categoriaRepository;
+    }
+
+    public List<Categoria> listarCategorias() {
         return categoriaRepository.findAll();
     }
 
-    public Optional<Categoria> buscarPorId(Long id) {
+    public Optional<Categoria> buscarCategoriaPorId(Long id) {
         return categoriaRepository.findById(id);
     }
 
-    public Categoria salvar(Categoria categoria) {
+    public Categoria criarCategoria(Categoria categoria) {
         return categoriaRepository.save(categoria);
     }
 
-    public void deletarPorId(Long id) {
-        categoriaRepository.deleteById(id);
+    public Categoria atualizarCategoria(Long id, Categoria categoriaAtualizada) {
+        return categoriaRepository.findById(id).map(categoria -> {
+            categoria.setNome(categoriaAtualizada.getNome());
+            categoria.setDescricao(categoriaAtualizada.getDescricao());
+            categoria.setImagem_url(categoriaAtualizada.getImagem_url());
+            categoria.setSlug(categoriaAtualizada.getSlug());
+            categoria.setStatus(categoriaAtualizada.getStatus());
+            categoria.setDataAtualizacao(LocalDateTime.now());
+            categoria.setOrdem(categoriaAtualizada.getOrdem());
+            categoria.setParent(categoriaAtualizada.getParent());
+            return categoriaRepository.save(categoria);
+        }).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
     }
 
-    public Categoria atualizar(Long id, Categoria categoriaAtualizada) {
-        if (categoriaRepository.existsById(id)) {
-            categoriaAtualizada.setId(id);
-            return categoriaRepository.save(categoriaAtualizada);
-        } else {
-            throw new RuntimeException("Categoria não encontrada");
-        }
+    public void deletarCategoria(Long id) {
+        categoriaRepository.deleteById(id);
     }
 }

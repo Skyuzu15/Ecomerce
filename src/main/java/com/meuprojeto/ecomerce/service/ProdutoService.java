@@ -1,10 +1,10 @@
 package com.meuprojeto.ecomerce.service;
 
-import com.meuprojeto.ecomerce.dto.ProductDTO;
-import com.meuprojeto.ecomerce.model.Product;
-import com.meuprojeto.ecomerce.repository.ProductRepository;
+import com.meuprojeto.ecomerce.model.Produto;
+import com.meuprojeto.ecomerce.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -12,48 +12,36 @@ import java.util.Optional;
 public class ProdutoService {
 
     @Autowired
-    private ProductRepository repository;
+    private ProdutoRepository produtoRepository;
 
-    public List<Product> listarTodos() {
-        return repository.findAll();
+    public List<Produto> listarTodos() {
+        return produtoRepository.findAll();
     }
 
-    public Optional<Product> buscarPorId(Long id) {
-        return repository.findById(id);
+    public Optional<Produto> buscarPorId(Long id) {
+        return produtoRepository.findById(id);
     }
 
-    public Product salvar(Product product) {
-        return repository.save(product);
+    public Produto salvar(Produto produto) {
+        return produtoRepository.save(produto);
     }
 
-    public void deletarPorId(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Produto não encontrado para exclusão.");
+    public Produto atualizar(Long id, Produto produtoAtualizado) {
+        return produtoRepository.findById(id).map(produto -> {
+            produto.setNome(produtoAtualizado.getNome());
+            produto.setDescricao(produtoAtualizado.getDescricao());
+            produto.setPreco(produtoAtualizado.getPreco());
+            produto.setQuantidadeEstoque(produtoAtualizado.getQuantidadeEstoque());
+            produto.setCategoria(produtoAtualizado.getCategoria());
+            return produtoRepository.save(produto);
+        }).orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
+    }
+
+    public void deletar(Long id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new RuntimeException("Produto não encontrado com ID: " + id);
         }
-        repository.deleteById(id);
-    }
-
-    public void criarProduto(ProductDTO productDTO) {
-        Product product = new Product();
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        product.setStockQuantity(productDTO.getStockQuantity());
-
-        repository.save(product);
-    }
-
-    public Product atualizarProduto(Long id, Product produtoAtualizado) {
-        Product produtoExistente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        produtoExistente.setName(produtoAtualizado.getName() != null ? produtoAtualizado.getName() : produtoExistente.getName());
-        produtoExistente.setDescription(produtoAtualizado.getDescription() != null ? produtoAtualizado.getDescription() : produtoExistente.getDescription());
-        produtoExistente.setPrice(produtoAtualizado.getPrice() != null ? produtoAtualizado.getPrice() : produtoExistente.getPrice());
-        produtoExistente.setStockQuantity(produtoAtualizado.getStockQuantity() != null
-                ? produtoAtualizado.getStockQuantity()
-                : produtoExistente.getStockQuantity());
-
-        return repository.save(produtoExistente);
+        produtoRepository.deleteById(id);
     }
 }
+
