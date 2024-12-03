@@ -23,8 +23,9 @@ public class Categoria {
     @Column(unique = true)
     private String slug;
 
-    @Column(nullable = false)
-    private Boolean status = true;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     @Column(name = "data_criação", nullable = false, updatable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
@@ -79,11 +80,11 @@ public class Categoria {
         this.slug = slug;
     }
 
-    public Boolean getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
