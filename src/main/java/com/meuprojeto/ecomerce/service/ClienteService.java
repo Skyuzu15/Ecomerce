@@ -2,22 +2,20 @@ package com.meuprojeto.ecomerce.service;
 
 import com.meuprojeto.ecomerce.model.Cliente;
 import com.meuprojeto.ecomerce.repository.ClienteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
-    public Cliente salvarCliente(Cliente cliente) {
-        cliente.setDataCadastro(LocalDateTime.now()); // Define a data de cadastro como o momento atual
-        return clienteRepository.save(cliente);
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
     }
 
     public List<Cliente> listarTodos() {
@@ -28,18 +26,23 @@ public class ClienteService {
         return clienteRepository.findById(id);
     }
 
+    public Cliente criarCliente(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
     public Cliente atualizarCliente(Long id, Cliente clienteAtualizado) {
-        Optional<Cliente> clienteExistente = clienteRepository.findById(id);
-        if (clienteExistente.isPresent()) {
-            Cliente cliente = clienteExistente.get();
-            cliente.setNome(clienteAtualizado.getNome());
-            cliente.setEmail(clienteAtualizado.getEmail());
-            cliente.setTelefone(clienteAtualizado.getTelefone());
-            cliente.setEndereco(clienteAtualizado.getEndereco());
-            cliente.setCpf(clienteAtualizado.getCpf());
-            return clienteRepository.save(cliente);
-        }
-        throw new RuntimeException("Cliente não encontrado");
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com id " + id));
+
+        // Atualizando os campos do cliente
+        clienteExistente.setNome(clienteAtualizado.getNome());
+        clienteExistente.setEmail(clienteAtualizado.getEmail());
+        clienteExistente.setTelefone(clienteAtualizado.getTelefone());
+        clienteExistente.setEndereco(clienteAtualizado.getEndereco());
+        clienteExistente.setCpf(clienteAtualizado.getCpf());
+
+        // Salvando o cliente atualizado no banco
+        return clienteRepository.save(clienteExistente);
     }
 
     public void deletarCliente(Long id) {

@@ -1,5 +1,6 @@
 package com.meuprojeto.ecomerce.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCliente;
+    private LocalDateTime idCliente;
 
     @Column(nullable = false)
     private String nome;
@@ -26,27 +27,27 @@ public class Cliente {
     @Column(nullable = false, unique = true)
     private String cpf;
 
-    @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataCadastro;
 
     public Cliente() {
     }
 
-    public Cliente(Long idCliente, String nome, String email, String telefone, String endereço, String cpf, LocalDateTime dataCadastro) {
+    public Cliente(LocalDateTime idCliente, String nome, String email, String telefone, String endereco, String cpf, LocalDateTime dataCadastro) {
         this.idCliente = idCliente;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
-        this.endereco = endereço;
+        this.endereco = endereco;
         this.cpf = cpf;
         this.dataCadastro = dataCadastro;
     }
 
-    public Long getIdCliente() {
+    public LocalDateTime getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(Long idCliente) {
+    public void setIdCliente(LocalDateTime idCliente) {
         this.idCliente = idCliente;
     }
 
