@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
-        logger.error("Exceção capturada: ", ex); // Log da exceção
+        logger.error("Exceção capturada: ", ex);
 
         Map<String, Object> response = new HashMap<>();
         response.put("exception", ex.getClass().getSimpleName());

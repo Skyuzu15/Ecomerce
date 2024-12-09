@@ -1,31 +1,35 @@
 package com.meuprojeto.ecomerce.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
+@Table(name = "pedidos")  // Nome da tabela no banco de dados
 public class Pedidos {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Para gerar o ID automaticamente
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    @Column(name = "cep")
+    private String cep;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<ItemPedidos> itens;
+    @Column(name = "endereco")
+    private String endereco;
 
-    private LocalDateTime dataPedido;
-    private double valorTotal;
+    @Column(name = "cidade")
+    private String cidade;
 
-    public Pedidos() {
-        this.dataPedido = LocalDateTime.now();
-    }
+    @Column(name = "pagamento")
+    private String pagamento;
 
-    // Getters e Setters
+    @Column(name = "produtos")
+    private String produtos;  // Pode ser um JSON ou um formato de lista de produtos
+
+    @Column(name = "total")
+    private double total;
+
+    // Getters e setters
 
     public Long getId() {
         return id;
@@ -35,36 +39,51 @@ public class Pedidos {
         this.id = id;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public String getCep() {
+        return cep;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 
-    public List<ItemPedidos> getItens() {
-        return itens;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setItens(List<ItemPedidos> itens) {
-        this.itens = itens;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
-    public LocalDateTime getDataPedido() {
-        return dataPedido;
+    public String getCidade() {
+        return cidade;
     }
 
-    public void setDataPedido(LocalDateTime dataPedido) {
-        this.dataPedido = dataPedido;
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 
-    public double getValorTotal() {
-        return valorTotal;
+    public String getPagamento() {
+        return pagamento;
     }
 
-    public void setValorTotal(double valorTotal) {
-        this.valorTotal = valorTotal;
+    public void setPagamento(String pagamento) {
+        this.pagamento = pagamento;
+    }
+
+    public String getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(String produtos) {
+        this.produtos = produtos;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }
-

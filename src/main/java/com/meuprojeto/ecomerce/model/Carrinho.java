@@ -41,7 +41,7 @@ public class Carrinho {
     }
 
     public Cliente getCliente() {
-        return cliente;  // Método para acessar o cliente
+        return cliente;
     }
 
     public void setCliente(Cliente cliente) {
